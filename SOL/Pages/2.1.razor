@@ -24,6 +24,7 @@
             case "Kreis":
                 <svg width="100" height="100">
                     <circle cx="50" cy="50" r="40" fill="green" />
+                    <rect x="50" y="50" width="40" height="2" fill="black" />
                     <text x="95" y="55" font-family="Arial" font-size="14" fill="black">r</text>
                 </svg>
                 <br />
@@ -36,16 +37,25 @@
                 }              
                 break;
             case "Dreieck":
-                <svg width="100" height="100">
-                    <polygon points="50,10 10,90 90,90" fill="blue" />
-                </svg>
-                <br />
-                @if (CalcType == "Umfang")
+                @if(CalcType == "Umfang")
                 {
+                    <svg width="100" height="110">
+                        <polygon points="50,10 10,90 90,90" fill="blue" />
+                        <text x="15" y="50" font-family="Arial" font-size="14" fill="black">a</text>
+                        <text x="85" y="50" font-family="Arial" font-size="14" fill="black">b</text>
+                        <text x="50" y="98" font-family="Arial" font-size="14" fill="black">c</text>
+                    </svg>
+                    <br />
                     <text> U = a + b + c </text>
                 }
                 else
                 {
+                    <svg width="100" height="110">
+                        <polygon points="50,10 10,90 90,90" fill="blue" />
+                        <text x="15" y="55" font-family="Arial" font-size="14" fill="black">h</text>
+                        <text x="50" y="98" font-family="Arial" font-size="14" fill="black">g</text>
+                    </svg>
+                    <br />
                     <text> A = g * h * 0.5</text>
                 }
                 break;
@@ -74,7 +84,7 @@
             case "Kreis":
             <label>
                 <text>radius</text>
-                <input type="number" @bind-value=a/>
+                <input type="number" min="0" @bind-value=a/>
             </label>
             break;
             case "Dreieck":
@@ -82,37 +92,37 @@
             {
                 <label>
                     <text>g</text>
-                    <input type="number" @bind-value=a/>
+                    <input type="number" min="0" @bind-value=a/>
                 </label>
                 <label>
                     <text>h</text>
-                    <input type="number" @bind-value=b/>
+                    <input type="number" min="0" @bind-value=b/>
                 </label>
             }
             else
             {
                 <label>
                     <text>a</text>
-                    <input type="number" @bind-value=a/>
+                    <input type="number" min="0" @bind-value=a/>
                 </label>
                 <label>
                     <text>b</text>
-                    <input type="number" @bind-value=b/>
+                    <input type="number" min="0" @bind-value=b/>
                 </label>
                 <label>
                     <text>c</text>
-                    <input type="number" @bind-value=c/>
+                    <input type="number" min="0" @bind-value=c/>
                 </label>
             }            
             break;
             case "Rechteck":
             <label>
                 <text>a</text>
-                <input type="number" @bind-value=a/>
+                <input type="number" min="0" @bind-value=a/>
             </label>
             <label>
                 <text>b</text>
-                <input type="number" @bind-value=b/>
+                <input type="number" min="0" @bind-value=b/>
             </label>
             break;
         }
@@ -141,9 +151,9 @@
     private double? result;
 
     //Values for calculation
-    private int a;
-    private int b;
-    private int c;
+    private double a;
+    private double b;
+    private double c;
 
     private void HandleRadioSelection(ChangeEventArgs e)
     {
