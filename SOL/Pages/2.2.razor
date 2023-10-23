@@ -34,6 +34,7 @@
             <option value="Spezialangebot">Spezialangebot</option>
         </select>
         <input type="text" @bind="price" placeholder="Price" />
+        <button @onclick="AddBooking">Add</button>
     </div>
 }
 
@@ -113,7 +114,7 @@
         showNextRow = false;
     }
 
-    private struct Booking
+    private class Booking
     {
         public string GuestName { get; set; }
         public string GuestEmail { get; set; }
