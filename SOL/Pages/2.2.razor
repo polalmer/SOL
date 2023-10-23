@@ -1,14 +1,125 @@
 ﻿@page "/Aufgabe2.2"
 
-@using MudBlazor;
-
 <PageTitle>Aufgabe 2.2</PageTitle>
 
-<label for="fruit">Select a fruit:</label>
-<select id="fruit" name="fruit">
-    <option value="apple">Apple</option>
-    <option value="banana">Banana</option>
-    <option value="cherry">Cherry</option>
-    <option value="grape">Grape</option>
-    <option value="orange">Orange</option>
-</select>
+
+<div>
+    <label>
+        <input type="checkbox" @bind="showNextRow"> Include Additional Guest
+    </label>
+</div>
+
+@if (showNextRow)
+{
+    <div>
+        <input type="text" @bind="guestName" placeholder="Guest Name" />
+        <input type="text" @bind="guestEmail" placeholder="Guest Email" />
+        <input type="checkbox" @bind="showCalendar"> Use Calendar Dialog
+        @if (showCalendar)
+        {
+            <input type="date" @bind="arrivalDate" />
+            <input type="date" @bind="departureDate" />
+        }
+        else
+        {
+            <div>
+                <input type="text" @bind="arrivalDate" placeholder="Arrival Date" />
+                <input type="text" @bind="departureDate" placeholder="Departure Date" />
+                <button @onclick="ShowCalendar">Open Calendar</button>
+            </div>
+        }
+        <select @bind="mealPlan">
+            <option value="Vollpension">Vollpension</option>
+            <option value="Halbpension">Halbpension</option>
+            <option value="Spezialangebot">Spezialangebot</option>
+        </select>
+        <input type="text" @bind="price" placeholder="Price" />
+    </div>
+}
+
+@if (bookings.Count > 0)
+{
+    <h4>Bookings:</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Guest Name</th>
+                <th>Guest Email</th>
+                <th>Arrival Date</th>
+                <th>Departure Date</th>
+                <th>Meal Plan</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in bookings)
+            {
+                <tr>
+                    <td>@booking.GuestName</td>
+                    <td>@booking.GuestEmail</td>
+                    <td>@booking.ArrivalDate.ToShortDateString()</td>
+                    <td>@booking.DepartureDate.ToShortDateString()</td>
+                    <td>@booking.MealPlan</td>
+                    <td>@booking.Price.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code{
+    private bool showNextRow = false;
+    private bool showCalendar = false;
+    private string guestName = "";
+    private string guestEmail = "";
+    private DateTime arrivalDate;
+    private DateTime departureDate;
+    private string mealPlan = "Vollpension";
+    private decimal price;
+
+    private List<Booking> bookings = new List<Booking>();
+
+    private void ShowCalendar()
+    {
+        showCalendar = true;
+    }
+
+    private void AddBooking()
+    {
+        if (arrivalDate >= departureDate || price < 0)
+        {
+            // Handle date and price validation here
+            return;
+        }
+
+        bookings.Add(new Booking
+            {
+                GuestName = guestName,
+                GuestEmail = guestEmail,
+                ArrivalDate = arrivalDate,
+                DepartureDate = departureDate,
+                MealPlan = mealPlan,
+                Price = price
+            });
+
+        // Reset form fields
+        guestName = "";
+        guestEmail = "";
+        arrivalDate = DateTime.Now;
+        departureDate = DateTime.Now;
+        mealPlan = "Vollpension";
+        price = 0.00m;
+        showCalendar = false;
+        showNextRow = false;
+    }
+
+    private struct Booking
+    {
+        public string GuestName { get; set; }
+        public string GuestEmail { get; set; }
+        public DateTime ArrivalDate { get; set; }
+        public DateTime DepartureDate { get; set; }
+        public string MealPlan { get; set; }
+        public decimal Price { get; set; }
+    }
+}
