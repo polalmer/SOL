@@ -1,0 +1,51 @@
+@page "/Aufgabe4_1"
+
+<PageTitle>Aufgabe 4.1</PageTitle>
+
+<div>
+    <label for="lineCount">Anzahl der Linien:</label>
+    <input type="number" id="lineCount" @bind="lineCount" />
+    <button @onclick="GenerateCircle">Kreis generieren</button>
+</div>
+
+<svg width="200" height="200">
+    <circle cx="100" cy="100" r="80" stroke="black" fill="transparent" />
+    @if (lines != null)
+    {
+        @foreach (var line in lines)
+        {
+            <line x1="100" y1="100" x2="@line.X2" y2="@line.Y2" stroke="@line.Color" />
+        }
+    }
+</svg>
+
+@code {
+    private int lineCount;
+    private List<LineInfo> lines;
+
+    private class LineInfo
+    {
+        public string Color { get; set; }
+        public double X2 { get; set; }
+        public double Y2 { get; set; }
+    }
+
+    private void GenerateCircle()
+    {
+        if (lineCount > 0)
+        {
+            var angle = 360.0 / lineCount;
+            lines = new List<LineInfo>();
+            var rand = new Random();
+
+            for (int i = 0; i < lineCount; i++)
+            {
+                var color = $"#{rand.Next(0x1000000):X6}";
+                var radians = angle * i * (Math.PI / 180);
+                var x2 = 100 + 80 * Math.Cos(radians);
+                var y2 = 100 + 80 * Math.Sin(radians);
+                lines.Add(new LineInfo { Color = color, X2 = x2, Y2 = y2 });
+            }
+        }
+    }
+}
