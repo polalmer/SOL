@@ -40,7 +40,7 @@
                 <th style="padding: 15px;">Art</th>
                 <th style="padding: 15px;">Von</th>
                 <th style="padding: 15px;">Bis</th>
-                <th style="padding: 15px;">Preis</th>
+                <th style="padding: 15px;">Preis in €</th>
             </tr>
         </thead>
         <tbody>
@@ -58,6 +58,7 @@
             }
         </tbody>
     </table>
+    <text>Summe: @Total €</text>
 }
 
 @code{
@@ -65,6 +66,7 @@
     private DateTime departureDate = DateTime.Now;
     private string type = "Vollpension";
     private decimal price;
+    private decimal Total {get{return GetTotal();}}
 
     private List<Booking> bookings = new List<Booking>();
 
@@ -72,7 +74,6 @@
     {
         if (arrivalDate >= departureDate || price < 0)
         {
-            // Handle date and price validation here
             return;
         }
 
@@ -94,6 +95,16 @@
     private void DeleteBooking(Booking booking)
     {
         bookings.Remove(booking);
+    }
+
+    private decimal GetTotal()
+    {
+        decimal total = 0;
+        foreach (Booking booking in bookings)
+        {
+            total += booking.Price;
+        }
+        return total;
     }
 
     private class Booking
