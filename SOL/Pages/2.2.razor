@@ -2,51 +2,58 @@
 
 <PageTitle>Aufgabe 2.2</PageTitle>
 
-<div>
-    <input type="checkbox" @bind="showCalendar"> Use Calendar Dialog
-    @if (showCalendar)
-    {
+<div style="display: flex; gap: 20px; align-items: center;">
+    <label style="text-align: center;">
+        <span style="display: block; margin-bottom: 5px;">Von</span>
         <input type="date" @bind="arrivalDate" />
+    </label>
+    
+    <label style="text-align: center;">
+        <span style="display: block; margin-bottom: 5px;">Bis</span>
         <input type="date" @bind="departureDate" />
-    }
-    else
-    {
-        <div>
-            <input type="text" @bind="arrivalDate" placeholder="Arrival Date" />
-            <input type="text" @bind="departureDate" placeholder="Departure Date" />
-            <button @onclick="ShowCalendar">Open Calendar</button>
-        </div>
-    }
-    <select @bind="type">
-        <option value="Vollpension">Vollpension</option>
-        <option value="Halbpension">Halbpension</option>
-        <option value="Spezialangebot">Spezialangebot</option>
-    </select>
-    <input type="text" @bind="price" placeholder="Price" />
+    </label>
+    
+    <label style="text-align: center;">
+        <span style="display: block; margin-bottom: 5px;">Art</span>
+        <select @bind="type">
+            <option value="Vollpension">Vollpension</option>
+            <option value="Halbpension">Halbpension</option>
+            <option value="Spezialangebot">Spezialangebot</option>
+        </select>
+    </label>
+    
+    <label style="text-align: center;">
+        <span style="display: block; margin-bottom: 5px;">Preis in €</span>
+        <input type="text" @bind="price" placeholder="Price" />
+    </label>
+    
     <button @onclick="AddBooking">Add</button>
 </div>
-
 
 @if (bookings.Count > 0)
 {
     <h4>Bookings:</h4>
     <table>
         <thead>
-            <tr>
-                <th>Art</th>
-                <th>Von</th>
-                <th>Bis</th>
-                <th>Preis</th>
+            <tr style="border-bottom: 2px solid #ddd;">
+                <th style="padding: 15px;"></th>
+                <th style="padding: 15px;">Art</th>
+                <th style="padding: 15px;">Von</th>
+                <th style="padding: 15px;">Bis</th>
+                <th style="padding: 15px;">Preis</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var booking in bookings)
             {
-                <tr>
-                    <td>@booking.Type</td>
-                    <td>@booking.ArrivalDate.ToShortDateString()</td>
-                    <td>@booking.DepartureDate.ToShortDateString()</td>                 
-                    <td>@booking.Price.ToString()</td>
+                <tr style="border-bottom: 2px solid #ddd;">
+                    <td style="padding: 15px;">
+                        <button @onclick="() => DeleteBooking(booking)">remove</button>
+                    </td>
+                    <td style="padding: 15px;">@booking.Type</td>
+                    <td style="padding: 15px;">@booking.ArrivalDate.ToShortDateString()</td>
+                    <td style="padding: 15px;">@booking.DepartureDate.ToShortDateString()</td>                 
+                    <td style="padding: 15px;">@booking.Price.ToString()</td>
                 </tr>
             }
         </tbody>
@@ -54,18 +61,12 @@
 }
 
 @code{
-    private bool showCalendar = false;
-    private DateTime arrivalDate;
-    private DateTime departureDate;
+    private DateTime arrivalDate = DateTime.Now;
+    private DateTime departureDate = DateTime.Now;
     private string type = "Vollpension";
     private decimal price;
 
     private List<Booking> bookings = new List<Booking>();
-
-    private void ShowCalendar()
-    {
-        showCalendar = true;
-    }
 
     private void AddBooking()
     {
@@ -88,7 +89,11 @@
         departureDate = DateTime.Now;
         type = "Vollpension";
         price = 0.00m;
-        showCalendar = false;
+    }
+
+    private void DeleteBooking(Booking booking)
+    {
+        bookings.Remove(booking);
     }
 
     private class Booking
