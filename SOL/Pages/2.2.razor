@@ -1,42 +1,31 @@
-﻿@page "/Aufgabe2.2"
+﻿@page "/Aufgabe22"
 
 <PageTitle>Aufgabe 2.2</PageTitle>
 
-
 <div>
-    <label>
-        <input type="checkbox" @bind="showNextRow"> Include Additional Guest
-    </label>
+    <input type="checkbox" @bind="showCalendar"> Use Calendar Dialog
+    @if (showCalendar)
+    {
+        <input type="date" @bind="arrivalDate" />
+        <input type="date" @bind="departureDate" />
+    }
+    else
+    {
+        <div>
+            <input type="text" @bind="arrivalDate" placeholder="Arrival Date" />
+            <input type="text" @bind="departureDate" placeholder="Departure Date" />
+            <button @onclick="ShowCalendar">Open Calendar</button>
+        </div>
+    }
+    <select @bind="type">
+        <option value="Vollpension">Vollpension</option>
+        <option value="Halbpension">Halbpension</option>
+        <option value="Spezialangebot">Spezialangebot</option>
+    </select>
+    <input type="text" @bind="price" placeholder="Price" />
+    <button @onclick="AddBooking">Add</button>
 </div>
 
-@if (showNextRow)
-{
-    <div>
-        <input type="text" @bind="guestName" placeholder="Guest Name" />
-        <input type="text" @bind="guestEmail" placeholder="Guest Email" />
-        <input type="checkbox" @bind="showCalendar"> Use Calendar Dialog
-        @if (showCalendar)
-        {
-            <input type="date" @bind="arrivalDate" />
-            <input type="date" @bind="departureDate" />
-        }
-        else
-        {
-            <div>
-                <input type="text" @bind="arrivalDate" placeholder="Arrival Date" />
-                <input type="text" @bind="departureDate" placeholder="Departure Date" />
-                <button @onclick="ShowCalendar">Open Calendar</button>
-            </div>
-        }
-        <select @bind="mealPlan">
-            <option value="Vollpension">Vollpension</option>
-            <option value="Halbpension">Halbpension</option>
-            <option value="Spezialangebot">Spezialangebot</option>
-        </select>
-        <input type="text" @bind="price" placeholder="Price" />
-        <button @onclick="AddBooking">Add</button>
-    </div>
-}
 
 @if (bookings.Count > 0)
 {
@@ -44,24 +33,20 @@
     <table>
         <thead>
             <tr>
-                <th>Guest Name</th>
-                <th>Guest Email</th>
-                <th>Arrival Date</th>
-                <th>Departure Date</th>
-                <th>Meal Plan</th>
-                <th>Price</th>
+                <th>Art</th>
+                <th>Von</th>
+                <th>Bis</th>
+                <th>Preis</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var booking in bookings)
             {
                 <tr>
-                    <td>@booking.GuestName</td>
-                    <td>@booking.GuestEmail</td>
+                    <td>@booking.Type</td>
                     <td>@booking.ArrivalDate.ToShortDateString()</td>
-                    <td>@booking.DepartureDate.ToShortDateString()</td>
-                    <td>@booking.MealPlan</td>
-                    <td>@booking.Price.ToString("C")</td>
+                    <td>@booking.DepartureDate.ToShortDateString()</td>                 
+                    <td>@booking.Price.ToString()</td>
                 </tr>
             }
         </tbody>
@@ -69,13 +54,10 @@
 }
 
 @code{
-    private bool showNextRow = false;
     private bool showCalendar = false;
-    private string guestName = "";
-    private string guestEmail = "";
     private DateTime arrivalDate;
     private DateTime departureDate;
-    private string mealPlan = "Vollpension";
+    private string type = "Vollpension";
     private decimal price;
 
     private List<Booking> bookings = new List<Booking>();
@@ -95,32 +77,25 @@
 
         bookings.Add(new Booking
             {
-                GuestName = guestName,
-                GuestEmail = guestEmail,
                 ArrivalDate = arrivalDate,
                 DepartureDate = departureDate,
-                MealPlan = mealPlan,
+                Type = type,
                 Price = price
             });
 
         // Reset form fields
-        guestName = "";
-        guestEmail = "";
         arrivalDate = DateTime.Now;
         departureDate = DateTime.Now;
-        mealPlan = "Vollpension";
+        type = "Vollpension";
         price = 0.00m;
         showCalendar = false;
-        showNextRow = false;
     }
 
     private class Booking
     {
-        public string GuestName { get; set; }
-        public string GuestEmail { get; set; }
         public DateTime ArrivalDate { get; set; }
         public DateTime DepartureDate { get; set; }
-        public string MealPlan { get; set; }
+        public string Type { get; set; }
         public decimal Price { get; set; }
     }
 }
