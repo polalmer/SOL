@@ -23,7 +23,7 @@
        }
        @if (figure is Pyramid pyramid)
        {
-            <polygon points="@pyramid.Pos.x,@pyramid.Pos.y,@pyramid.Pos2.x,@pyramid.Pos2.y, @pyramid.Pos3.x,@pyramid.Pos3.y" fill="@pyramid.Color" />
+            <polygon points="@pyramid.Pos.x,@pyramid.Pos.y @pyramid.Pos2.x,@pyramid.Pos2.y @pyramid.Pos3.x,@pyramid.Pos3.y" fill="@pyramid.Color" />
        }
     }
 </svg>
@@ -88,8 +88,8 @@
                         Pos = (rand.Next(400), rand.Next(400)),
                         Color = $"#{rand.Next(0x1000000):X6}"
                     };
-                    pyramid.Pos2 = (pyramid.Pos.x + rand.Next(50), pyramid.Pos.y);
-                    pyramid.Pos3 = ((pyramid.Pos2.x - pyramid.Pos.x / 2), pyramid.Pos.y + rand.Next(50));
+                    pyramid.Pos2 = (pyramid.Pos.x + rand.Next(20,60), pyramid.Pos.y);
+                    pyramid.Pos3 = (pyramid.Pos.x + ((pyramid.Pos2.x - pyramid.Pos.x) / 2), pyramid.Pos.y - rand.Next(20,60));
                     figures.Add(pyramid);
                     continue;
             }
