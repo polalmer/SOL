@@ -1,0 +1,98 @@
+﻿@page "/aufgabe4_2"
+
+<PageTitle>Aufgabe 4.2</PageTitle>
+
+<div>
+    <label for="lineCount">Figuren:</label>
+    <input type="number" id="lineCount" @bind="figureCount" />
+    <button @onclick="GenerateFigures">Figuren generieren</button>
+</div>
+
+<svg width="400" height="400">
+    @foreach(SVG figure in figures)
+    {
+       @if (figure is Rect rect)
+       {
+           <rect height="@rect.Height" width="@rect.Width" x="@rect.Pos.x" y="@rect.Pos.y" style="fill:@rect.Color"></rect>
+           continue;
+       }
+       @if (figure is Circle circle)
+       {
+            <circle cx="@circle.Pos.x" cy="@circle.Pos.y" r="@circle.radius" fill="@circle.Color" />
+            continue;
+       }
+       @if (figure is Pyramid pyramid)
+       {
+            <polygon points="@pyramid.Pos.x,@pyramid.Pos.y,@pyramid.Pos2.x,@pyramid.Pos2.y, @pyramid.Pos3.x,@pyramid.Pos3.y" fill="@pyramid.Color" />
+       }
+    }
+</svg>
+
+@code {
+    private int figureCount;
+    private List<SVG> figures = new();
+    private Random rand = new();
+
+    class Rect : SVG
+    {
+        public int Height{ get; set; }
+        public int Width { get; set; }
+    }
+
+    class Circle : SVG
+    {
+        public int radius{ get; set; }
+    }
+
+    class Pyramid : SVG
+    {
+        public (int x, int y) Pos2 { get; set; }
+        public (int x, int y) Pos3 { get; set; }
+    }
+
+    class SVG
+    {
+        public string? Color{ get; set; }
+
+        public (int x, int y) Pos{ get; set; }
+    }
+
+    private void GenerateFigures()
+    {
+        figures.Clear();
+
+        for (int i = 0; i < figureCount; i++)
+        {
+            int typ = rand.Next(3);
+            switch(typ)
+            {
+                case 0:
+                    figures.Add(new Rect()
+                        {
+                            Height = rand.Next(100),
+                            Width = rand.Next(100),
+                            Pos = (rand.Next(400), rand.Next(400)),
+                            Color = $"#{rand.Next(0x1000000):X6}"
+                    });
+                    continue;
+                case 1:
+                    figures.Add(new Circle {
+                            Pos = (rand.Next(400), rand.Next(400)),
+                            Color = $"#{rand.Next(0x1000000):X6}",
+                            radius = rand.Next(60)
+                    });
+                    continue;
+                case 2:
+                    Pyramid pyramid = new()
+                    {
+                        Pos = (rand.Next(400), rand.Next(400)),
+                        Color = $"#{rand.Next(0x1000000):X6}"
+                    };
+                    pyramid.Pos2 = (pyramid.Pos.x + rand.Next(50), pyramid.Pos.y);
+                    pyramid.Pos3 = ((pyramid.Pos2.x - pyramid.Pos.x / 2), pyramid.Pos.y + rand.Next(50));
+                    figures.Add(pyramid);
+                    continue;
+            }
+        }
+    }
+}
