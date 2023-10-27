@@ -1,4 +1,5 @@
 @page "/Aufgabe4_1"
+@using System.Globalization;
 
 <PageTitle>Aufgabe 4.1</PageTitle>
 
@@ -26,13 +27,13 @@
     private class LineInfo
     {
         public string Color { get; set; }
-        public double X2 { get; set; }
-        public double Y2 { get; set; }
+        public string X2 { get; set; }
+        public string Y2 { get; set; }
     }
 
     private void GenerateCircle()
     {
-        if (lineCount > 0)
+        if (lineCount > 1)
         {
             var angle = 360.0 / lineCount;
             lines = new List<LineInfo>();
@@ -42,8 +43,8 @@
             {
                 var color = $"#{rand.Next(0x1000000):X6}";
                 var radians = angle * i * (Math.PI / 180);
-                var x2 = 100 + 80 * Math.Cos(radians);
-                var y2 = 100 + 80 * Math.Sin(radians);
+                var x2 = (100 + 80 * Math.Cos(radians)).ToString("F2", CultureInfo.InvariantCulture);
+                var y2 = (100 + 80 * Math.Sin(radians)).ToString("F2", CultureInfo.InvariantCulture);
                 lines.Add(new LineInfo { Color = color, X2 = x2, Y2 = y2 });
             }
         }
